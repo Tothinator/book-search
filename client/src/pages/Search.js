@@ -67,12 +67,12 @@ class Search extends Component {
                         <Row>                    
                             {this.state.books.map(book => (
                                 <Col key={book.id}
-                                    size="sm-12">
+                                    size="sm-6">
                                     <Card 
                                         title={book.volumeInfo.title}
                                         subTitle={book.volumeInfo.authors}
                                         image={book.volumeInfo.imageLinks.smallThumbnail}
-                                        // bodyText={book.volumeInfo.description}
+                                        bodyText={book.volumeInfo.description}
                                         link={book.volumeInfo.infoLink}
                                     >
                                         <SaveBtn />
