@@ -1,12 +1,11 @@
 import axios from "axios";
 
 const BASEURL = "https://www.googleapis.com/books/v1/volumes?q=";
-const APIKEY = "&key=" + process.env.GOOGLEBOOKSKEY || "AIzaSyDlpcymR1LYWG4YknTS8DFv13o9Ib5Ydbw";
 
 export default {
     // Search the Google Books API for books
     search: function(query) {
-        return axios.get(BASEURL + query + APIKEY);
+        return axios.get(BASEURL + query);
     },
     // Gets the books saved in the database
     getSaved: function() {
