@@ -43,7 +43,7 @@
     <script>
       $(function() {
         $(document).on("click", ".card", function(e) {
-          if (!$(e.target).hasClass("save delete")){
+          if (!$(e.target).hasClass("save") && !$(e.target).hasClass("delete")){
             $(this).toggleClass("is-flipped");
           }
         });

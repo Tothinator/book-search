@@ -6,7 +6,7 @@ function Nav() {
     return ( 
         <nav className="navbar navbar-light bg-light">
             <div className="container">
-                <Link to="/" className={window.location.pathname === "/" ? "navbar-brand" : "nav-link"}>
+                <Link to="/" className={window.location.pathname === "/" ? "navbar-brand" : "navbar-brand"}>
                     Google Book Search
                 </Link>
                 <ul className="nav">
