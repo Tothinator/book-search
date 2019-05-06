@@ -11,8 +11,18 @@ class Search extends Component {
 
     state = {
         books: [],
+        savedBooks: [],
         query: "",
     };
+
+    componentDidMount() {
+        API.getSaved()
+            .then(({ data }) => {
+                const savedIds = data.map(book => book._id);
+                this.setState({ savedBooks: savedIds })
+            })
+            .catch(err => console.log(err));
+    }
 
     search = () => {
         API.search(this.state.query)
@@ -31,21 +41,17 @@ class Search extends Component {
                         link: book.volumeInfo.infoLink
                     }
 
-                    API.getBook(newBook._id)
-                        .then(res => {
-                            res.data ? newBook.saved = true : newBook.saved = false;
+                    this.setState( state => {
+                        const books = state.books.concat(newBook);
+                        // console.log(newBook);
+                        return {
+                            books: books,
+                            savedBooks: state.savedBooks,
+                            query: state.query
+                        }
+                    });
 
-                            this.setState( state => {
-                                const books = state.books.concat(newBook);
-                                // console.log(newBook);
-                                return {
-                                    books: books,
-                                    query: state.query
-                                }
-                            });
-                        })
-                        .catch(err => console.log(err));
-                    
+                    return book;
                 });
 
             })
@@ -53,34 +59,20 @@ class Search extends Component {
     };
 
     saveBook = id => {
-        const book = this.state.books.filter(book => book.id === id)[0];
-        const data = {
-            _id: book._id,
-            title: book.title,
-            authors: book.authors,
-            description: book.description,
-            image: book.image,
-            link: book.link
-        }
-        API.saveBook(data)
-            .then(res => {
-                console.log(res);
-                this.setState(state => {
-                    let books = state.books;
-                    books = books.map(book => {
-                        if (book._id === data._id) {
-                            book.saved = true;
-                            return book;
-                        } else {
-                            return book;
-                        }
-                    });
+        const book = this.state.books.filter(book => book._id === id)[0];
 
+        API.saveBook(book)
+            .then(res => {
+                // console.log(res);
+                this.setState( state => {
+                    const savedBooks = state.savedBooks.concat(book._id);
+                    console.log(savedBooks);
                     return {
-                        books: books,
-                        query: ""
+                        books: state.books,
+                        savedBooks: savedBooks,
+                        query: state.query
                     }
-                })
+                });
             })
             .catch(err => console.log(err));
     }
@@ -138,7 +130,7 @@ class Search extends Component {
                                     >
                                         <SaveBtn 
                                             onClick={() => this.saveBook(book._id)}
-                                            saved={book.saved}
+                                            saved={this.state.savedBooks.indexOf(book._id) !== -1}
                                         />
                                     </Card>
                                 </Col>

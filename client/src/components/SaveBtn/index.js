@@ -3,7 +3,7 @@ import "./style.css";
 
 function SaveBtn({ onClick, saved}) {
     return(
-        <button className={`btn btn-${saved ? "disabled" : "success"}`} onClick={onClick}>{saved ? "Book Saved" : "Save Book"}</button>
+        <button className={`save btn btn-${saved ? "danger" : "success"}`} onClick={onClick}>{saved ? "Book Saved" : "Save Book"}</button>
     )
 }
 

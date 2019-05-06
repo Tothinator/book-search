@@ -17,13 +17,14 @@ module.exports = {
     },
     create: function(req, res) {
         db.Book
-            .findOrCreate(req.body)
-            .then(dbModel => res.json(dbModel))
-            .catch(err => res.status(422).json(err));
+            .findOrCreate(req.body, dbModel => res.json(dbModel));
+            // .then(dbModel => res.json(dbModel))
+            // .catch(err => res.status(422).json(err));
     },
     remove: function(req, res) {
         db.Book
-            .findById({ _id: req.params.id }, req.body)
+            .findById({ _id: req.params.id })
+            .then(dbModel => dbModel.remove())
             .then(dbModel => res.json(dbModel))
             .catch(err => res.status(422).json(err));
     }
