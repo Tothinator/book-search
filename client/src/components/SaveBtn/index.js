@@ -1,9 +1,9 @@
 import React from "react";
 import "./style.css";
 
-function SaveBtn(props) {
+function SaveBtn({ onClick, saved}) {
     return(
-        <button className="btn btn-success" {...props}>Save Book</button>
+        <button className={`btn btn-${saved ? "disabled" : "success"}`} onClick={onClick}>{saved ? "Book Saved" : "Save Book"}</button>
     )
 }
 

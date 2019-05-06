@@ -17,12 +17,73 @@ class Search extends Component {
     search = () => {
         API.search(this.state.query)
             .then(res => {
-                this.setState({ books: res.data.items, query: "" })
-                console.log(this.state.books);
-            }
-            )
+
+                this.setState({ query: "" });
+                
+                res.data.items.map(book => {
+
+                    const newBook = {
+                        _id: book.id,
+                        title: book.volumeInfo.title,
+                        authors: book.volumeInfo.authors,
+                        description: book.volumeInfo.description,
+                        image: book.volumeInfo.imageLinks.smallThumbnail,
+                        link: book.volumeInfo.infoLink
+                    }
+
+                    API.getBook(newBook._id)
+                        .then(res => {
+                            res.data ? newBook.saved = true : newBook.saved = false;
+
+                            this.setState( state => {
+                                const books = state.books.concat(newBook);
+                                // console.log(newBook);
+                                return {
+                                    books: books,
+                                    query: state.query
+                                }
+                            });
+                        })
+                        .catch(err => console.log(err));
+                    
+                });
+
+            })
             .catch(err => console.log(err));
     };
+
+    saveBook = id => {
+        const book = this.state.books.filter(book => book.id === id)[0];
+        const data = {
+            _id: book._id,
+            title: book.title,
+            authors: book.authors,
+            description: book.description,
+            image: book.image,
+            link: book.link
+        }
+        API.saveBook(data)
+            .then(res => {
+                console.log(res);
+                this.setState(state => {
+                    let books = state.books;
+                    books = books.map(book => {
+                        if (book._id === data._id) {
+                            book.saved = true;
+                            return book;
+                        } else {
+                            return book;
+                        }
+                    });
+
+                    return {
+                        books: books,
+                        query: ""
+                    }
+                })
+            })
+            .catch(err => console.log(err));
+    }
 
     handleInputChange = event => {
         const { name, value } = event.target;
@@ -66,16 +127,19 @@ class Search extends Component {
                     {this.state.books.length ? (
                         <Row>                    
                             {this.state.books.map(book => (
-                                <Col key={book.id}
-                                    size="sm-6">
+                                <Col key={book._id}
+                                    size="sm-12 md-6">
                                     <Card 
-                                        title={book.volumeInfo.title}
-                                        subTitle={book.volumeInfo.authors}
-                                        image={book.volumeInfo.imageLinks.smallThumbnail}
-                                        bodyText={book.volumeInfo.description}
-                                        link={book.volumeInfo.infoLink}
+                                        title={book.title}
+                                        subTitle={book.authors}
+                                        image={book.image}
+                                        bodyText={book.description}
+                                        link={book.link}
                                     >
-                                        <SaveBtn />
+                                        <SaveBtn 
+                                            onClick={() => this.saveBook(book._id)}
+                                            saved={book.saved}
+                                        />
                                     </Card>
                                 </Col>
                             ))}

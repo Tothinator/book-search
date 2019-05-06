@@ -1,7 +1,13 @@
 const mongoose = require("mongoose");
+const findOrCreate = require("mongoose-find-or-create");
 const Schema = mongoose.Schema;
 
 const bookSchema = new Schema({
+    _id: {
+        type: String,
+        required: true,
+        unique: true
+    },
     title: {
         type: String,
         required: true
@@ -20,6 +26,8 @@ const bookSchema = new Schema({
         type: String
     }
 });
+
+bookSchema.plugin(findOrCreate);
 
 const Book = mongoose.model("Book", bookSchema);
 

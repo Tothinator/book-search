@@ -7,6 +7,10 @@ export default {
     search: function(query) {
         return axios.get(BASEURL + query);
     },
+    // Find a specific book
+    getBook: function(id) {
+        return axios.get("/api/books/" + id);
+    },
     // Gets the books saved in the database
     getSaved: function() {
         return axios.get("/api/books");
